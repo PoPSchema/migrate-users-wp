@@ -1,1 +1,2 @@
-<?php require_once 'migrate/pop-users-wp.php;'
+<?php 
+require_once 'migrate/pop-users-wp.php';
