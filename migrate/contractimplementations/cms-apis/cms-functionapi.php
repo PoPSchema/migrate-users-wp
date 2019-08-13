@@ -1,9 +1,12 @@
 <?php
 namespace PoP\Users\WP;
 use PoP\Hooks\Facades\HooksAPIFacade;
+use PoP\Engine\DataloaderAPITrait;
 
 class FunctionAPI extends \PoP\Users\FunctionAPI_Base
 {
+    use DataloaderAPITrait;
+
     public function getAuthorBase()
     {
         global $wp_rewrite;
