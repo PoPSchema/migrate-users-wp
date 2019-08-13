@@ -25,6 +25,10 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
     {
         return get_user_by('login', $value);
     }
+    protected function getFilterDataloadingModule(): ?array
+    {
+        return [\PoP_Users_Module_Processor_FieldDataloads::class, \PoP_Users_Module_Processor_FieldDataloads::MODULE_DATALOAD_DATAQUERY_USERLIST_FIELDS];
+    }
     public function getUsers($query = array(), array $options = [])
     {
         if ($return_type = $options['return-type']) {
@@ -32,6 +36,9 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
                 $query['fields'] = 'ID';
             }
         }
+
+        // Accept field atts to filter the API fields
+        $this->maybeFilterDataloadQueryArgs($query, $options, $this->getFilterDataloadingModule());
 
         // Convert parameters
         if (isset($query['name'])) {
@@ -62,7 +69,7 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
             // Same param name, so do nothing
         }
         if (isset($query['limit'])) {
-            
+
             $query['number'] = $query['limit'];
             unset($query['limit']);
         }
