@@ -1,7 +1,7 @@
 <?php
 namespace PoP\Users\WP;
 use PoP\Hooks\Facades\HooksAPIFacade;
-use PoP\Engine\DataloaderAPITrait;
+use PoP\ComponentModel\DataloaderAPITrait;
 
 class FunctionAPI extends \PoP\Users\FunctionAPI_Base
 {
