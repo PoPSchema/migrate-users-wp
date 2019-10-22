@@ -1,13 +1,14 @@
 <?php
 namespace PoP\Users\WP;
+use PoP\Hooks\Facades\HooksAPIFacade;
 use PoP\LooseContracts\Facades\Contracts\NameResolverFacade;
+use PoP\LooseContracts\Facades\Contracts\LooseContractManagerFacade;
 
-class PostsCMSLooseContractImplementations
+class PostsCMSLooseContractImplementations extends AbstractLooseContractResolutionSet
 {
-	function __construct() {
-		
-		$nameresolver = NameResolverFacade::getInstance();
-		$nameresolver->implementNames([
+	protected function resolveContracts()
+    {
+		$this->nameResolver->implementNames([
 			'popcms:dbcolumn:orderby:users:post-count' => 'post_count',
 		]);
 	}
@@ -16,5 +17,9 @@ class PostsCMSLooseContractImplementations
 /**
  * Initialize
  */
-new PostsCMSLooseContractImplementations();
+new PostsCMSLooseContractImplementations(
+	LooseContractManagerFacade::getInstance(),
+	NameResolverFacade::getInstance(),
+	HooksAPIFacade::getInstance()
+);
 
