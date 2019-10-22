@@ -1,11 +1,12 @@
 <?php
 namespace PoP\Users\WP;
+use PoP\LooseContracts\Facades\Contracts\NameResolverFacade;
 
 class CMSLooseContractImplementations
 {
 	function __construct() {
 		
-		$nameresolver = \PoP\LooseContracts\NameResolverFactory::getInstance();
+		$nameresolver = NameResolverFacade::getInstance();
 		$nameresolver->implementNames([
 			'popcms:dbcolumn:orderby:users:name' => 'name',
 			'popcms:dbcolumn:orderby:users:id' => 'ID',
