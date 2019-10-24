@@ -1,6 +1,7 @@
 <?php
 namespace PoP\Users\WP;
 use PoP\Hooks\Facades\HooksAPIFacade;
+use PoP\Users\Routing\RouteNatures;
 
 class WPCMSRoutingStateHooks
 {
@@ -17,7 +18,7 @@ class WPCMSRoutingStateHooks
     public function getNature($nature, $query)
     {
         if ($query->is_author()) {
-            return POP_NATURE_USER;
+            return RouteNatures::USER;
         }
 
         return $nature;
