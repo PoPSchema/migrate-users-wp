@@ -110,23 +110,18 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
      */
     public function enableMultipleEmails($query) {
         $qv =& $query->query_vars;
-        // var_dump('adentro', $qv);
         if (isset($qv['search'])) {
             $search = trim( $qv['search'] );
             // Validate it has no wildcards, it's email (because there's a "@") and there's more than one (because there's ",")
             $leading_wild = (ltrim($search, '*') != $search);
             $trailing_wild = (rtrim($search, '*') != $search);
             if (!$leading_wild && !$trailing_wild && false !== strpos($search, '@') && false !== strpos($search, ',')) {
-                // global $wpdb;
-                // $searches = [$wpdb->prepare( "user_email IN (%s)", $search )];
                 // Replace the query
                 $emails = explode(',', $search);
                 $searches = [sprintf("user_email IN (%s)", "'".implode("','", $emails)."'")];
                 $replace = $query->get_search_sql( $search, ['user_email'], false );
                 $replacement = ' AND (' .implode(' OR ', $searches).')';
-                // var_dump('before', $replace, $replacement, $query->query_where);
                 $query->query_where = str_replace($replace, $replacement, $query->query_where);
-                // var_dump('after', $query->query_where);
             }
         }
     }
