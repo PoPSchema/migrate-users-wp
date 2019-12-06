@@ -1,11 +1,11 @@
 <?php
 namespace PoP\Users\WP;
 use PoP\Hooks\Facades\HooksAPIFacade;
-use PoP\API\Dataloaders\DataloaderAPITrait;
+use PoP\API\Dataloaders\APITypeDataResolverTrait;
 
 class FunctionAPI extends \PoP\Users\FunctionAPI_Base
 {
-    use DataloaderAPITrait;
+    use APITypeDataResolverTrait;
 
     public function getAuthorBase()
     {
