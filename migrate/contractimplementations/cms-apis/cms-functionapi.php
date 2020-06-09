@@ -3,8 +3,9 @@
 namespace PoP\Users\WP;
 
 use PoP\Hooks\Facades\HooksAPIFacade;
-use PoP\ComponentModel\TypeDataResolvers\APITypeDataResolverTrait;
 use PoP\Users\ComponentConfiguration;
+use PoP\QueriedObject\TypeAPIs\TypeAPIUtils;
+use PoP\ComponentModel\TypeDataResolvers\APITypeDataResolverTrait;
 
 class FunctionAPI extends \PoP\Users\FunctionAPI_Base
 {
@@ -71,12 +72,11 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
             // Same param name, so do nothing
         }
         if (isset($query['limit'])) {
-            // Check if the limit is higher than the max limit
-            $limit = $query['limit'];
-            $maxLimit = ComponentConfiguration::getUserListMaxLimit();
-            if (!is_null($maxLimit) && $maxLimit != -1 && ($limit == -1 || $limit > $maxLimit)) {
-                $limit = $maxLimit;
-            }
+            // Maybe restrict the limit, if higher than the max limit
+            $limit = TypeAPIUtils::getLimitOrMaxLimit(
+                $query['limit'],
+                ComponentConfiguration::getUserListMaxLimit()
+            );
             // Assign the limit as the required attribute
             $query['number'] = $limit;
             unset($query['limit']);
