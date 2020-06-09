@@ -32,7 +32,95 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
     {
         return get_user_by('login', $value);
     }
+
+    public function getUserCount($query = array())
+    {
+        // All results
+        if (!isset($query['limit'])) {
+            $query['limit'] = -1;
+        }
+
+        // Convert the parameters
+        $query = $this->convertUsersQuery($query, ['return-type' => POP_RETURNTYPE_IDS]);
+
+        // Limit users which have an email appearing on the input
+        // WordPress does not allow to search by many email addresses, only 1!
+        // Then we implement a hack to allow for it:
+        // 1. Set field "search", as expected
+        // 2. Add a hook which will modify the SQL query
+        // 3. Execute query
+        // 4. Remove hook
+        $filterByEmails = $this->filterByEmails($query);
+        if ($filterByEmails) {
+            add_action('pre_user_query', [$this, 'enableMultipleEmails']);
+        }
+
+        // Execute the query. Original solution from:
+        // @see https://developer.wordpress.org/reference/functions/get_users/#source
+        // Only difference: use `total_count` => true, `get_total` instead of `get_results`
+        $args                = \wp_parse_args($query);
+        $args['count_total'] = true;
+        $user_search = new \WP_User_Query($args);
+        $ret = $user_search->get_total();
+
+        // Remove the hook
+        if ($filterByEmails) {
+            remove_action('pre_user_query', [$this, 'enableMultipleEmails']);
+        }
+        return $ret;
+    }
     public function getUsers($query = array(), array $options = [])
+    {
+        // Convert the parameters
+        $query = $this->convertUsersQuery($query, $options);
+
+        // Limit users which have an email appearing on the input
+        // WordPress does not allow to search by many email addresses, only 1!
+        // Then we implement a hack to allow for it:
+        // 1. Set field "search", as expected
+        // 2. Add a hook which will modify the SQL query
+        // 3. Execute query
+        // 4. Remove hook
+        $filterByEmails = $this->filterByEmails($query);
+        if ($filterByEmails) {
+            add_action('pre_user_query', [$this, 'enableMultipleEmails']);
+        }
+
+        // Execute the query
+        $ret = get_users($query);
+
+        // Remove the hook
+        if ($filterByEmails) {
+            remove_action('pre_user_query', [$this, 'enableMultipleEmails']);
+        }
+        return $ret;
+    }
+    /**
+     * Limit users which have an email appearing on the input
+     * WordPress does not allow to search by many email addresses, only 1!
+     * Then we implement a hack to allow for it:
+     * 1. Set field "search", as expected
+     * 2. Add a hook which will modify the SQL query
+     * 3. Execute query
+     * 4. Remove hook
+     *
+     * @param array $query
+     * @return void
+     */
+    public function filterByEmails($query = array())
+    {
+        if (isset($query['emails'])) {
+            $emails = $query['emails'];
+            // This works for either 1 or many emails
+            $query['search'] = implode(',', $emails);
+            // But if there's more than 1 email, we must modify the SQL query with a hook
+            if (count($emails) > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    protected function convertUsersQuery($query = array(), array $options = []): array
     {
         if ($return_type = $options['return-type']) {
             if ($return_type == POP_RETURNTYPE_IDS) {
@@ -81,36 +169,12 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
             $query['number'] = $limit;
             unset($query['limit']);
         }
-        // Limit users which have an email appearing on the input
-        // WordPress does not allow to search by many email addresses, only 1!
-        // Then we implement a hack to allow for it:
-        // 1. Set field "search", as expected
-        // 2. Add a hook which will modify the SQL query
-        // 3. Execute query
-        // 4. Remove hook
-        $filterByEmails = false;
-        if (isset($query['emails'])) {
-            $emails = $query['emails'];
-            // This works for either 1 or many emails
-            $query['search'] = implode(',', $emails);
-            // But if there's more than 1 email, we must modify the SQL query with a hook
-            if (count($emails) > 1) {
-                add_action('pre_user_query', [$this, 'enableMultipleEmails']);
-                $filterByEmails = true;
-            }
-        }
 
-        $query = HooksAPIFacade::getInstance()->applyFilters(
+        return HooksAPIFacade::getInstance()->applyFilters(
             'CMSAPI:users:query',
             $query,
             $options
         );
-        $ret = get_users($query);
-        // Remove the hook
-        if ($filterByEmails) {
-            remove_action('pre_user_query', [$this, 'enableMultipleEmails']);
-        }
-        return $ret;
     }
     /**
      * Modify the SQL query, replacing searching for a single email
