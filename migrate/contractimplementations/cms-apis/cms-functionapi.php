@@ -33,15 +33,15 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
         return get_user_by('login', $value);
     }
 
-    public function getUserCount($query = array())
+    public function getUserCount(array $query = [], array $options = [])
     {
-        // All results
-        if (!isset($query['limit'])) {
-            $query['limit'] = -1;
-        }
-
         // Convert the parameters
-        $query = $this->convertUsersQuery($query, ['return-type' => POP_RETURNTYPE_IDS]);
+        $options['return-type'] = POP_RETURNTYPE_IDS;
+        $query = $this->convertUsersQuery($query, $options);
+
+        // All results, no offset
+        $query['number'] = -1;
+        unset($query['offset']);
 
         // Limit users which have an email appearing on the input
         // WordPress does not allow to search by many email addresses, only 1!
