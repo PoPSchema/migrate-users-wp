@@ -1,7 +1,10 @@
 <?php
+
 namespace PoP\Users\WP;
+
 use PoP\Hooks\Facades\HooksAPIFacade;
 use PoP\ComponentModel\TypeDataResolvers\APITypeDataResolverTrait;
+use PoP\Users\ComponentConfiguration;
 
 class FunctionAPI extends \PoP\Users\FunctionAPI_Base
 {
@@ -68,7 +71,14 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
             // Same param name, so do nothing
         }
         if (isset($query['limit'])) {
-            $query['number'] = $query['limit'];
+            // Check if the limit is higher than the max limit
+            $limit = $query['limit'];
+            $maxLimit = ComponentConfiguration::getUserListMaxLimit();
+            if (!is_null($maxLimit) && $maxLimit != -1 && ($limit == -1 || $limit > $maxLimit)) {
+                $limit = $maxLimit;
+            }
+            // Assign the limit as the required attribute
+            $query['number'] = $limit;
             unset($query['limit']);
         }
         // Limit users which have an email appearing on the input
@@ -103,24 +113,27 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
         return $ret;
     }
     /**
-     * Modify the SQL query, replacing searching for a single email (with SQL operation "=") to multiple ones (with SQL operation "IN")
+     * Modify the SQL query, replacing searching for a single email
+     * (with SQL operation "=") to multiple ones (with SQL operation "IN")
      *
      * @param [type] $query
      * @return void
      */
-    public function enableMultipleEmails($query) {
+    public function enableMultipleEmails($query)
+    {
         $qv =& $query->query_vars;
         if (isset($qv['search'])) {
-            $search = trim( $qv['search'] );
-            // Validate it has no wildcards, it's email (because there's a "@") and there's more than one (because there's ",")
+            $search = trim($qv['search']);
+            // Validate it has no wildcards, it's email (because there's a "@")
+            // and there's more than one (because there's ",")
             $leading_wild = (ltrim($search, '*') != $search);
             $trailing_wild = (rtrim($search, '*') != $search);
             if (!$leading_wild && !$trailing_wild && false !== strpos($search, '@') && false !== strpos($search, ',')) {
                 // Replace the query
                 $emails = explode(',', $search);
-                $searches = [sprintf("user_email IN (%s)", "'".implode("','", $emails)."'")];
-                $replace = $query->get_search_sql( $search, ['user_email'], false );
-                $replacement = ' AND (' .implode(' OR ', $searches).')';
+                $searches = [sprintf("user_email IN (%s)", "'" . implode("','", $emails) . "'")];
+                $replace = $query->get_search_sql($search, ['user_email'], false);
+                $replacement = ' AND (' . implode(' OR ', $searches) . ')';
                 $query->query_where = str_replace($replace, $replacement, $query->query_where);
             }
         }
