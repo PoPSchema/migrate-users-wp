@@ -33,7 +33,7 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
         return get_user_by('login', $value);
     }
 
-    public function getUserCount(array $query = [], array $options = [])
+    public function getUserCount(array $query = [], array $options = []): int
     {
         // Convert the parameters
         $options['return-type'] = POP_RETURNTYPE_IDS;
@@ -61,7 +61,7 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
         $args                = \wp_parse_args($query);
         $args['count_total'] = true;
         $user_search = new \WP_User_Query($args);
-        $ret = $user_search->get_total();
+        $ret = (int) $user_search->get_total();
 
         // Remove the hook
         if ($filterByEmails) {
@@ -69,7 +69,7 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
         }
         return $ret;
     }
-    public function getUsers($query = array(), array $options = [])
+    public function getUsers($query = array(), array $options = []): array
     {
         // Convert the parameters
         $query = $this->convertUsersQuery($query, $options);
