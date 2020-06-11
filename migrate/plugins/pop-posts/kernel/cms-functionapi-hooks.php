@@ -5,7 +5,7 @@ use PoP\Hooks\Facades\HooksAPIFacade;
 class FunctionAPIHooks {
 
 	public function __construct() {
-	
+
 		HooksAPIFacade::getInstance()->addFilter(
 		    'CMSAPI:posts:query',
 		    [$this, 'convertPostsQuery'],
@@ -14,14 +14,14 @@ class FunctionAPIHooks {
 		);
 	}
 
-	public function convertPostsQuery($query, array $options)
+	public function convertPostsQuery($query, array $options): array
     {
         if (isset($query['authors'])) {
 
             $query['author'] = implode(',', $query['authors']);
             unset($query['authors']);
         }
-        
+
         return $query;
     }
 }
