@@ -1,5 +1,5 @@
 <?php
 
-if (defined('POP_POSTS_INITIALIZED')) {
-	require_once 'pop-posts/load.php';
+if (class_exists('\PoP\CustomPostsWP\Component')) {
+	require_once 'pop-customposts-wp/load.php';
 }
