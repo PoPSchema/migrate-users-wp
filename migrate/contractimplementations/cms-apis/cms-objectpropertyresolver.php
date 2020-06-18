@@ -11,6 +11,10 @@ class ObjectPropertyResolver extends \PoP\Users\ObjectPropertyResolver_Base
     {
         return $user->user_nicename;
     }
+    public function getUserSlug($user)
+    {
+        return $user->user_nicename;
+    }
     public function getUserDisplayName($user)
     {
         return $user->display_name;
