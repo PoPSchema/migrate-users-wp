@@ -7,14 +7,14 @@ class FunctionAPIHooks {
 	public function __construct() {
 
 		HooksAPIFacade::getInstance()->addFilter(
-		    'CMSAPI:posts:query',
-		    [$this, 'convertPostsQuery'],
+		    'CMSAPI:customposts:query',
+		    [$this, 'convertCustomPostsQuery'],
 		    10,
 		    2
 		);
 	}
 
-	public function convertPostsQuery($query, array $options): array
+	public function convertCustomPostsQuery($query, array $options): array
     {
         if (isset($query['authors'])) {
 
