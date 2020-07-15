@@ -161,10 +161,15 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
         }
         if (isset($query['limit'])) {
             // Maybe restrict the limit, if higher than the max limit
-            $limit = TypeAPIUtils::getLimitOrMaxLimit(
-                $query['limit'],
-                ComponentConfiguration::getUserListMaxLimit()
-            );
+            // Allow to not limit by max when querying from within the application
+            $limit = $query['limit'];
+            if (!$options['skip-max-limit']) {
+                $limit = TypeAPIUtils::getLimitOrMaxLimit(
+                    $limit,
+                    ComponentConfiguration::getUserListMaxLimit()
+                );
+            }
+
             // Assign the limit as the required attribute
             $query['number'] = $limit;
             unset($query['limit']);
