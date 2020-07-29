@@ -107,7 +107,7 @@ class FunctionAPI extends \PoP\Users\FunctionAPI_Base
      * @param array $query
      * @return void
      */
-    public function filterByEmails($query = array())
+    protected function filterByEmails(&$query)
     {
         if (isset($query['emails'])) {
             $emails = $query['emails'];
