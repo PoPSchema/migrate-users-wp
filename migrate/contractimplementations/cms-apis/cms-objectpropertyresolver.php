@@ -1,7 +1,7 @@
 <?php
-namespace PoP\Users\WP;
+namespace PoPSchema\Users\WP;
 
-class ObjectPropertyResolver extends \PoP\Users\ObjectPropertyResolver_Base
+class ObjectPropertyResolver extends \PoPSchema\Users\ObjectPropertyResolver_Base
 {
     public function getUserLogin($user)
     {

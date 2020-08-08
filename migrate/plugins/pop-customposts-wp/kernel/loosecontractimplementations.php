@@ -1,5 +1,5 @@
 <?php
-namespace PoP\Users\WP;
+namespace PoPSchema\Users\WP;
 use PoP\Hooks\Facades\HooksAPIFacade;
 use PoP\LooseContracts\Facades\NameResolverFacade;
 use PoP\LooseContracts\Facades\LooseContractManagerFacade;

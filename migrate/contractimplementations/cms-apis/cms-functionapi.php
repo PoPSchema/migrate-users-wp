@@ -1,13 +1,13 @@
 <?php
 
-namespace PoP\Users\WP;
+namespace PoPSchema\Users\WP;
 
 use PoP\Hooks\Facades\HooksAPIFacade;
-use PoP\Users\ComponentConfiguration;
-use PoP\QueriedObject\TypeAPIs\TypeAPIUtils;
+use PoPSchema\Users\ComponentConfiguration;
+use PoPSchema\QueriedObject\TypeAPIs\TypeAPIUtils;
 use PoP\ComponentModel\TypeDataResolvers\APITypeDataResolverTrait;
 
-class FunctionAPI extends \PoP\Users\FunctionAPI_Base
+class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
 {
     use APITypeDataResolverTrait;
 

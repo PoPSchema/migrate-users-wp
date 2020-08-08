@@ -1,7 +1,7 @@
 <?php
-namespace PoP\Users\WP;
+namespace PoPSchema\Users\WP;
 use PoP\Hooks\Facades\HooksAPIFacade;
-use PoP\Users\Routing\RouteNatures;
+use PoPSchema\Users\Routing\RouteNatures;
 
 class WPCMSRoutingStateHooks
 {

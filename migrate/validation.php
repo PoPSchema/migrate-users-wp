@@ -1,5 +1,5 @@
 <?php
-namespace PoP\Users\WP;
+namespace PoPSchema\Users\WP;
 use PoP\Translation\Facades\TranslationAPIFacade;
 use PoP\Hooks\Facades\HooksAPIFacade;
 
