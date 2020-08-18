@@ -6,6 +6,7 @@ use PoP\Hooks\Facades\HooksAPIFacade;
 use PoPSchema\Users\ComponentConfiguration;
 use PoPSchema\QueriedObject\TypeAPIs\TypeAPIUtils;
 use PoP\ComponentModel\TypeDataResolvers\APITypeDataResolverTrait;
+use PoPSchema\SchemaCommons\DataLoading\ReturnTypes;
 
 class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
 {
@@ -36,7 +37,7 @@ class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
     public function getUserCount(array $query = [], array $options = []): int
     {
         // Convert the parameters
-        $options['return-type'] = POP_RETURNTYPE_IDS;
+        $options['return-type'] = ReturnTypes::IDS;
         $query = $this->convertUsersQuery($query, $options);
 
         // All results, no offset
@@ -123,7 +124,7 @@ class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
     protected function convertUsersQuery($query = array(), array $options = []): array
     {
         if ($return_type = $options['return-type']) {
-            if ($return_type == POP_RETURNTYPE_IDS) {
+            if ($return_type == ReturnTypes::IDS) {
                 $query['fields'] = 'ID';
             }
         }
