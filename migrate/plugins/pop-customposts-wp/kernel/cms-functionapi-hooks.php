@@ -14,7 +14,12 @@ class FunctionAPIHooks {
 		);
 	}
 
-	public function convertCustomPostsQuery($query, array $options): array
+	/**
+     * @param array<string, mixed> $query
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
+     */
+    public function convertCustomPostsQuery(array $query, array $options): array
     {
         if (isset($query['authors'])) {
 
