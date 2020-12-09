@@ -123,7 +123,7 @@ class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
     }
     protected function convertUsersQuery($query = array(), array $options = []): array
     {
-        if ($return_type = $options['return-type']) {
+        if ($return_type = $options['return-type'] ?? null) {
             if ($return_type == ReturnTypes::IDS) {
                 $query['fields'] = 'ID';
             }
@@ -141,7 +141,7 @@ class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
             ];
             unset($query['name']);
         }
-        if ($query['include']) {
+        if (isset($query['include'])) {
             // Transform from array to string
             $query['include'] = implode(',', $query['include']);
         }
@@ -164,7 +164,7 @@ class FunctionAPI extends \PoPSchema\Users\FunctionAPI_Base
             // Maybe restrict the limit, if higher than the max limit
             // Allow to not limit by max when querying from within the application
             $limit = $query['limit'];
-            if (!$options['skip-max-limit']) {
+            if (!isset($options['skip-max-limit']) || !$options['skip-max-limit']) {
                 $limit = TypeAPIUtils::getLimitOrMaxLimit(
                     $limit,
                     ComponentConfiguration::getUserListMaxLimit()
