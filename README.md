@@ -1,6 +1,6 @@
 # (Temporary package) Migrate code to package: Users for WordPress
 
-Code to be migrated, from legacy PHP 5 code to modern PHP 7 code ([read more here](https://github.com/leoloso/PoP#codebase-migration)). Target package description:  Implementation for WordPress of contracts from package "Users"
+Code to be migrated, from legacy to modern PHP code ([read more here](https://github.com/leoloso/PoP#codebase-migration)). Target package description:  Implementation for WordPress of contracts from package "Users"
 
 ## Install
 
@@ -9,6 +9,10 @@ Via Composer
 ``` bash
 composer require pop-schema/migrate-users-wp
 ```
+
+## Development
+
+The source code is hosted on the [PoP monorepo](https://github.com/leoloso/PoP), under [`Schema/packages/migrate-users-wp`](https://github.com/leoloso/PoP/tree/master/layers/Schema/packages/migrate-users-wp).
 
 ## Security
 
@@ -36,4 +40,4 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-code-quality]: https://scrutinizer-ci.com/g/pop-schema/users-wp
 [link-downloads]: https://packagist.org/packages/pop-schema/users-wp
 [link-author]: https://github.com/leoloso
-[link-contributors]: ../../contributors
+[link-contributors]: ../../../../../../contributors
